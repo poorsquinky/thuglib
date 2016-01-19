@@ -43,7 +43,11 @@ Mutant Plants:
    Coconut Catapult Palm
 
 Mutant Animals:
-   Bovine Growth Hormone Mad Cow
+   Bovine Growth Hormone Giant Mad Cow
+   Lepus
+   Rabid Lepus
+   Enormous Spider
+   Really Really Big Ant
 
 People:
    Feral Raver
@@ -61,7 +65,9 @@ People:
    Cannibal Chief
    Cannibal Chef
 
-Genetically Engineered Recreations of Classic Monsters:
+Genetically Engineered Recreations of Classic Monsters and Extinct Animals:
+   Classic(TM) Woolly Mammoth
+   Classic(TM) Dodo
    Classic(TM) Bigfoot
    Classic(TM) Vampire
    Classic(TM) Centaur
@@ -69,7 +75,7 @@ Genetically Engineered Recreations of Classic Monsters:
    Classic(TM) Velociraptor
    Classic(TM) Tyrannosaurus
 
-Cryptids - out of the closet: these are very regional
+Cryptids: these are very regional
    Jersey Devil
    Lake Monster
    Bigfoot
