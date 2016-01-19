@@ -15,26 +15,22 @@ namespace ThugLib
         //    [1] = inner fill
         // custom params:
         //    none
-        public override List<MapRoom> Run(int[][] map, MapRectangle fillRegion)
+        public override List<MapRoom> Run(int[][] map, MapRectangle fillRegion,
+           List<MapRoom> roomsToInclude)
         {
-            for (int i = fillRegion.x; i < fillRegion.x + fillRegion.w; i++)
+            bool[][] pixelIsProtected = BuildProtectedMap(roomsToInclude,
+               map.Length, map[0].Length);
+            for (int i = fillRegion.x; i <= fillRegion.x2; i++)
             {
-                for (int j = fillRegion.y; j < fillRegion.y + fillRegion.h; j++)
+                for (int j = fillRegion.y; j <= fillRegion.y2; j++)
                 {
-                    map[i][j] = pixelTypes[1];
-                }
-            }
-            if (pixelTypes[1] != pixelTypes[0])
-            {
-                for (int i = fillRegion.x; i < fillRegion.x + fillRegion.w; i++)
-                {
-                    map[i][fillRegion.y] = pixelTypes[0];
-                    map[i][fillRegion.y + fillRegion.h - 1] = pixelTypes[0];
-                }
-                for (int j = fillRegion.y; j < fillRegion.y + fillRegion.h; j++)
-                {
-                    map[fillRegion.x][j] = pixelTypes[0];
-                    map[fillRegion.x + fillRegion.w - 1][j] = pixelTypes[0];
+                    if (!pixelIsProtected[i][j])
+                    {
+                        bool isBorder = (i == fillRegion.x ||
+                           i == fillRegion.x2 || j == fillRegion.y ||
+                           j == fillRegion.y2);
+                        map[i][j] = isBorder ? pixelTypes[1] : pixelTypes[0];
+                    }
                 }
             }
             return new List<MapRoom>(new MapRoom[0]);
