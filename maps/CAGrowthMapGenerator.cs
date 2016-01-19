@@ -4,15 +4,17 @@ using System.Collections.Generic;
 
 namespace ThugLib
 {
-    public class CADecayMapGenerator : MapGenerator
+    public class CAGrowthMapGenerator : MapGenerator
     {
-        private int seedCorridorAverageSpacing;
+        private int[] openGrowthPixels;
 
-        private int seedCorridorAverageLength;
+        private int newGrowthPixel;
 
-        private int numberOfDecays;
+        private int seedPointInverseDensity;
 
-        private int decayPercentPerDecayedNeighbor;
+        private int numberOfGrowPasses;
+
+        private int growthPercentPerGrownNeighbor;
 
         private Random random;
 
@@ -26,19 +28,23 @@ namespace ThugLib
         //       length from 50% to 150% of that.  Should be somewhat less than
         //       smallest map dim.  Seed corridors are truncated at inviolable
         //       rectangles
-        //    numberOfDecays - number of CA decay steps to run
-        //    decayPercentPerDecayedNeighbor - chance of a filled square 
+        //    numberOfGrowths - number of CA decay steps to run
+        //    decayPercentPerGrowthedNeighbor - chance of a filled square 
         //       decaying to empty = # of decayed neighbors * this percent
-        public CADecayMapGenerator(int[] pixelTypes,
-           int seedCorridorAverageSpacing,
-           int seedCorridorAverageLength,
-           int numberOfDecays,
-           int decayPercentPerDecayedNeighbor) : base(pixelTypes)
+        public CAGrowthMapGenerator(int[] pixelTypes,
+           int seedPointInverseDensity,
+           int numberOfGrowPasses,
+           int growthPercentPerGrownNeighbor) : base(pixelTypes)
         {
-            this.seedCorridorAverageSpacing = seedCorridorAverageSpacing;
-            this.seedCorridorAverageLength = seedCorridorAverageLength;
-            this.numberOfDecays = numberOfDecays;
-            this.decayPercentPerDecayedNeighbor = decayPercentPerDecayedNeighbor;
+            this.newGrowthPixel = pixelTypes[0];
+            this.openGrowthPixels = new int[pixelTypes.Length - 1];
+            for (int i = 0; i < openGrowthPixels.Length; i++)
+            {
+                openGrowthPixels[i] = pixelTypes[i + 1];
+            }
+            this.seedPointInverseDensity = seedPointInverseDensity;
+            this.numberOfGrowPasses = numberOfGrowPasses;
+            this.growthPercentPerGrownNeighbor = growthPercentPerGrownNeighbor;
             this.random = new Random();
         }
 
@@ -47,95 +53,78 @@ namespace ThugLib
         {
             bool[][] pixelIsProtected = BuildProtectedMap(roomsToInclude,
                map.Length, map[0].Length);
-          
-            // clear to solid
+        
+            // make a map of which pixels are open for growth
+            int nOpen = 0;
+            bool[][] open = new bool[fillRegion.w][];
             for (int i = fillRegion.x; i <= fillRegion.x2; i++)
             {
+                open[i] = new bool[fillRegion.h];
                 for (int j = fillRegion.y; j <= fillRegion.y2; j++)
                 {
                     if (!pixelIsProtected[i][j])
                     {
-                        map[i][j] = pixelTypes[0];
+                        for (int k = 0; k < openGrowthPixels.Length; k++)
+                        {
+                            if (map[i][j] == openGrowthPixels[k])
+                            {
+                                open[i - fillRegion.x][j - fillRegion.y] = true;
+                                nOpen++;
+                            }
+                        }
                     }
                 }
             }
 
-            // put in the horizontal seed corridors
-            int n = fillRegion.h / seedCorridorAverageSpacing;
+            // put in the seeds
+            int n = nOpen / seedPointInverseDensity;
             for (int i = 0; i < n; i++)
             {
-                int l = random.Next(seedCorridorAverageLength / 2,
-                   3 * seedCorridorAverageLength / 2 + 1);
-                int offset = 0;
-                if (l >= fillRegion.w)
+                int offset = random.Next(0, nOpen);
+                for (int j = 0; (j < fillRegion.w) && (offset > 0); j++)
                 {
-                    l = fillRegion.w;
-                }
-                else
-                {
-                    offset = random.Next(0, fillRegion.w - l + 1);
-                }
-                int crossOffset = random.Next(fillRegion.y, fillRegion.y2 + 1);
-                for (int j = offset; j < offset + l; j++)
-                {
-                    if (!pixelIsProtected[j + fillRegion.x][crossOffset])
+                    for (int k = 0; k < fillRegion.h; k++)
                     {
-                        map[j + fillRegion.x][crossOffset] = pixelTypes[1];
+                       if (open[j][k])
+                       {
+                           offset--;
+                           if (offset == 0)
+                           {
+                               map[j + fillRegion.x][k + fillRegion.y] = 
+                                  newGrowthPixel;
+                           }
+                       }
                     }
                 }
             }
 
-            // put in the vertical seed corridors
-            n = fillRegion.w / seedCorridorAverageSpacing;
-            for (int i = 0; i < n; i++)
-            {
-                int l = random.Next(seedCorridorAverageLength / 2,
-                   3 * seedCorridorAverageLength / 2 + 1);
-                int offset = 0;
-                if (l >= fillRegion.h)
-                {
-                    l = fillRegion.h;
-                }
-                else
-                {
-                    offset = random.Next(0, fillRegion.h - l + 1);
-                }
-                int crossOffset = random.Next(fillRegion.x, fillRegion.x2 + 1);
-                for (int j = offset; j < offset + l; j++)
-                {
-                    if (!pixelIsProtected[crossOffset][j + fillRegion.y])
-                    {
-                        map[crossOffset][j + fillRegion.y] = pixelTypes[1];
-                    }
-                }
-            }
-
-            for (int k = 0; k < numberOfDecays; k++)
+            for (int k = 0; k < numberOfGrowPasses; k++)
             {
                 for (int i = fillRegion.x; i <= fillRegion.x2; i++)
                 {
                     for (int j = fillRegion.y; j <= fillRegion.y2; j++)
                     {
-                        if (map[i][j] == pixelTypes[0] && !pixelIsProtected[i][j])
+                        if (map[i][j] != newGrowthPixel &&
+                           open[i - fillRegion.x][j - fillRegion.y])
                         {
                             int nNeighbors = 0;
                             if (i > 0)
                             {
                                if (j > 0)
                                {
-                                   if (map[i - 1][j - 1] == pixelTypes[1])
+                                   if (map[i - 1][j - 1] == newGrowthPixel)
                                    {
                                        nNeighbors++;
                                    }
                                }
                                if (j < map[i].Length - 1)
                                {
-                                   if (map[i - 1][j + 1] == pixelTypes[1])
+                                   if (map[i - 1][j + 1] == newGrowthPixel)
                                    {
                                        nNeighbors++;
                                    }
                                }
-                               if (map[i - 1][j] == pixelTypes[1])
+                               if (map[i - 1][j] == newGrowthPixel)
                                {
                                    nNeighbors++;
                                }
@@ -144,39 +133,39 @@ namespace ThugLib
                             {
                                if (j > 0)
                                {
-                                   if (map[i + 1][j - 1] == pixelTypes[1])
+                                   if (map[i + 1][j - 1] == newGrowthPixel)
                                    {
                                        nNeighbors++;
                                    }
                                }
                                if (j < map[i].Length - 1)
                                {
-                                   if (map[i + 1][j + 1] == pixelTypes[1])
+                                   if (map[i + 1][j + 1] == newGrowthPixel)
                                    {
                                        nNeighbors++;
                                    }
                                }
-                               if (map[i + 1][j] == pixelTypes[1])
+                               if (map[i + 1][j] == newGrowthPixel)
                                {
                                    nNeighbors++;
                                }
                             }
                             if (j > 0)
                             {
-                                if (map[i][j - 1] == pixelTypes[1])
+                                if (map[i][j - 1] == newGrowthPixel)
                                 {
                                     nNeighbors++;
                                 }
                             }
                             if (j < map[i].Length - 1)
                             {
-                                if (map[i][j + 1] == pixelTypes[1])
+                                if (map[i][j + 1] == newGrowthPixel)
                                 {
                                     nNeighbors++;
                                 }
                             }
                             int flipChance = nNeighbors * 
-                               decayPercentPerDecayedNeighbor;
+                               growthPercentPerGrownNeighbor;
                             if (random.Next(1, 101) < flipChance)
                             {
                                 map[i][j] = -1;
@@ -190,7 +179,7 @@ namespace ThugLib
                     {
                         if (map[i][j] == -1 && !pixelIsProtected[i][j])
                         {
-                            map[i][j] = pixelTypes[1];
+                            map[i][j] = newGrowthPixel;
                         }
                     }
                 }
