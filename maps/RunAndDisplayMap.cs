@@ -18,7 +18,14 @@ namespace ThugLib
 
         private static void DisplayMap(int[][] map, char[] palette)
         {
-            
+            for (int i = 0; i < map.Length; i++) 
+            {
+                for (int j = 0; j < map[i].Length; j++) 
+                {
+                    Console.Write(palette[map[j][i]]);
+                }
+                Console.Write("\n");
+            }
         }
 
         public static int Main(String[] args)
