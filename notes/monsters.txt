@@ -11,10 +11,13 @@ Robots:
    Mannequin Centipede
    Animatronic Pirate
    Animatronic Cowboy
+   Animatronic Clown
+   Animatronic Singing Bear
    Animatronic Ro-Man
    Animatronic President
    Animatronic Nazi
    Animatronic Hitler
+   Animatronic Murderous Housewife
    DFA Delivery Drone
    Predator Drone
 
@@ -48,18 +51,27 @@ People:
    Serial Killer Clown
    Serial Killer Cowboy
    Gimp
+   Psychotronic Man (psychically makes your head explode)
    Militia Goon
    Militia Rifleman
    Militia Commander
-   Psychotronic Man
+   Militia Trancer (psychically makes your head explode)
    Fleshy-Headed Mutant
    Cannibal
    Cannibal Chief
    Cannibal Chef
 
 Genetically Engineered Recreations of Classic Monsters:
+   Classic(TM) Bigfoot
    Classic(TM) Vampire
    Classic(TM) Centaur
    Classic(TM) Fire-breathing Dragon
    Classic(TM) Velociraptor
    Classic(TM) Tyrannosaurus
+
+Cryptids - out of the closet: these are very regional
+   Jersey Devil
+   Lake Monster
+   Bigfoot
+   Abominable Snowman
+   Mongolian Death Worm
