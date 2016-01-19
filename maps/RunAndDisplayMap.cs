@@ -30,9 +30,12 @@ namespace ThugLib
 
         public static int Main(String[] args)
         {
-            ClearMapGenerator gen = new ClearMapGenerator(new int[] {0, 1});
-            int[][] map = AllocateMap(30, 30);
-            gen.Run(map, new MapRectangle(0, 0, 30, 30));
+            ClearMapGenerator gen = new ClearMapGenerator(new int[] {0, 0});
+            int[][] map = AllocateMap(40, 40);
+            gen.Run(map, new MapRectangle(0, 0, 40, 40));
+            CADecayMapGenerator cad = new CADecayMapGenerator(new int[] {0, 1},
+               10, 20, 5, 10);
+            cad.Run(map, new MapRectangle(0, 0, 40, 40));
             DisplayMap(map, new char[] {'#', '.'});
             return 0;
         }
