@@ -14,8 +14,6 @@ namespace ThugLib
 
         private int decayPercentPerDecayedNeighbor;
 
-        private Random random;
-
         // pixel types: 
         //    [0] = wall (filled)
         //    [1] = floor (empty)
@@ -30,16 +28,16 @@ namespace ThugLib
         //    decayPercentPerDecayedNeighbor - chance of a filled square 
         //       decaying to empty = # of decayed neighbors * this percent
         public CADecayMapGenerator(int[] pixelTypes,
+           MapCoordinate coordinate,
            int seedCorridorAverageSpacing,
            int seedCorridorAverageLength,
            int numberOfDecays,
-           int decayPercentPerDecayedNeighbor) : base(pixelTypes)
+           int decayPercentPerDecayedNeighbor) : base(pixelTypes, coordinate)
         {
             this.seedCorridorAverageSpacing = seedCorridorAverageSpacing;
             this.seedCorridorAverageLength = seedCorridorAverageLength;
             this.numberOfDecays = numberOfDecays;
             this.decayPercentPerDecayedNeighbor = decayPercentPerDecayedNeighbor;
-            this.random = new Random();
         }
 
         public override List<MapRoom> Run(int[][] map, MapRectangle fillRegion,
@@ -64,7 +62,7 @@ namespace ThugLib
             int n = fillRegion.h / seedCorridorAverageSpacing;
             for (int i = 0; i < n; i++)
             {
-                int l = random.Next(seedCorridorAverageLength / 2,
+                int l = NextRandom(seedCorridorAverageLength / 2,
                    3 * seedCorridorAverageLength / 2 + 1);
                 int offset = 0;
                 if (l >= fillRegion.w)
@@ -73,9 +71,9 @@ namespace ThugLib
                 }
                 else
                 {
-                    offset = random.Next(0, fillRegion.w - l + 1);
+                    offset = NextRandom(0, fillRegion.w - l + 1);
                 }
-                int crossOffset = random.Next(fillRegion.y, fillRegion.y2 + 1);
+                int crossOffset = NextRandom(fillRegion.y, fillRegion.y2 + 1);
                 for (int j = offset; j < offset + l; j++)
                 {
                     if (!pixelIsProtected[j + fillRegion.x][crossOffset])
@@ -89,7 +87,7 @@ namespace ThugLib
             n = fillRegion.w / seedCorridorAverageSpacing;
             for (int i = 0; i < n; i++)
             {
-                int l = random.Next(seedCorridorAverageLength / 2,
+                int l = NextRandom(seedCorridorAverageLength / 2,
                    3 * seedCorridorAverageLength / 2 + 1);
                 int offset = 0;
                 if (l >= fillRegion.h)
@@ -98,9 +96,9 @@ namespace ThugLib
                 }
                 else
                 {
-                    offset = random.Next(0, fillRegion.h - l + 1);
+                    offset = NextRandom(0, fillRegion.h - l + 1);
                 }
-                int crossOffset = random.Next(fillRegion.x, fillRegion.x2 + 1);
+                int crossOffset = NextRandom(fillRegion.x, fillRegion.x2 + 1);
                 for (int j = offset; j < offset + l; j++)
                 {
                     if (!pixelIsProtected[crossOffset][j + fillRegion.y])
@@ -177,7 +175,7 @@ namespace ThugLib
                             }
                             int flipChance = nNeighbors * 
                                decayPercentPerDecayedNeighbor;
-                            if (random.Next(1, 101) < flipChance)
+                            if (NextRandom(1, 101) < flipChance)
                             {
                                 map[i][j] = -1;
                             }

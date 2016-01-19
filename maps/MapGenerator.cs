@@ -45,13 +45,45 @@ namespace ThugLib
         }
     };
 
+    // represents the map's coordinate in the world; used to seed the RNG
+    // if desired.
+    public struct MapCoordinate
+    {
+        public long guid;
+
+        public static long nextGuid = 0L;
+
+        public static MapCoordinate GenerateRandom()
+        {
+            MapCoordinate newCoord = new MapCoordinate();
+            newCoord.guid = nextGuid++;
+            return newCoord;
+        }
+    };
+
     public abstract class MapGenerator
     {
         protected int[] pixelTypes;
 
-        public MapGenerator(int[] pixelTypes)
+        protected MapCoordinate coordinate;
+
+        protected Random random;
+
+        public void UseCoordinateBasedRandom()
+        {
+            random = new Random((Int32)coordinate.guid);
+        }
+
+        public MapGenerator(int[] pixelTypes, MapCoordinate coordinate)
         {
             this.pixelTypes = pixelTypes;
+            this.coordinate = coordinate;
+            this.random = new Random();
+        }
+
+        protected int NextRandom(int low, int highPlusOne)
+        {
+            return random.Next(low, highPlusOne);
         }
 
         public abstract List<MapRoom> Run(int[][] map, MapRectangle fillRegion,

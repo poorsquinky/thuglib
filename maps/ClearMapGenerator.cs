@@ -6,7 +6,8 @@ namespace ThugLib
 {
     public class ClearMapGenerator : MapGenerator
     {
-        public ClearMapGenerator(int[] pixelTypes) : base(pixelTypes)
+        public ClearMapGenerator(int[] pixelTypes, MapCoordinate coordinate) :
+           base(pixelTypes, coordinate)
         {
         }
 

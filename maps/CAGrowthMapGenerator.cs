@@ -16,25 +16,20 @@ namespace ThugLib
 
         private int growthPercentPerGrownNeighbor;
 
-        private Random random;
-
         // pixel types: 
-        //    [0] = wall (filled)
-        //    [1] = floor (empty)
+        //    [0] = what grows here
+        //    [1]..[n] = existing pixel types [0] can grow into
         // custom params:
-        //    seedCorridorAverageSpacing - average x and y distance between
-        //       parallel seed corridors
-        //    seedCorridorAverageLength - average length of seed corridors;
-        //       length from 50% to 150% of that.  Should be somewhat less than
-        //       smallest map dim.  Seed corridors are truncated at inviolable
-        //       rectangles
-        //    numberOfGrowths - number of CA decay steps to run
-        //    decayPercentPerGrowthedNeighbor - chance of a filled square 
-        //       decaying to empty = # of decayed neighbors * this percent
+        //    seedPointInverseDensity - on the first pass, we seed with single
+        //       pixels of [0], on average one per this many growable squares
+        //    numberOfGrowPasses - number of CA growth steps to run
+        //    growthPercentPerGrownNeighbor - chance of an open growable square
+        //       switching to [0] = # of [0] neighbors * this percent
         public CAGrowthMapGenerator(int[] pixelTypes,
+           MapCoordinate coordinate,
            int seedPointInverseDensity,
            int numberOfGrowPasses,
-           int growthPercentPerGrownNeighbor) : base(pixelTypes)
+           int growthPercentPerGrownNeighbor) : base(pixelTypes, coordinate)
         {
             this.newGrowthPixel = pixelTypes[0];
             this.openGrowthPixels = new int[pixelTypes.Length - 1];
@@ -45,7 +40,6 @@ namespace ThugLib
             this.seedPointInverseDensity = seedPointInverseDensity;
             this.numberOfGrowPasses = numberOfGrowPasses;
             this.growthPercentPerGrownNeighbor = growthPercentPerGrownNeighbor;
-            this.random = new Random();
         }
 
         public override List<MapRoom> Run(int[][] map, MapRectangle fillRegion,
@@ -80,7 +74,7 @@ namespace ThugLib
             int n = nOpen / seedPointInverseDensity;
             for (int i = 0; i < n; i++)
             {
-                int offset = random.Next(0, nOpen);
+                int offset = NextRandom(0, nOpen);
                 for (int j = 0; (j < fillRegion.w) && (offset > 0); j++)
                 {
                     for (int k = 0; k < fillRegion.h; k++)
@@ -166,7 +160,7 @@ namespace ThugLib
                             }
                             int flipChance = nNeighbors * 
                                growthPercentPerGrownNeighbor;
-                            if (random.Next(1, 101) < flipChance)
+                            if (NextRandom(1, 101) < flipChance)
                             {
                                 map[i][j] = -1;
                             }
