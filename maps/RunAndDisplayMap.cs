@@ -42,7 +42,7 @@ namespace ThugLib
             gen.Run(map, fullArea, blockedList);
             CADecayMapGenerator cad = new CADecayMapGenerator(new int[] {0, 1},
                MapCoordinate.GenerateRandom(), 10, 20, 5, 10);
-            cad.UseCoordinateBasedRandom(); // remove this to get random caves
+            // cad.UseCoordinateBasedRandom(); // add this to not get random caves
             cad.Run(map, fullArea, blockedList);
             CAGrowthMapGenerator cag1 = new CAGrowthMapGenerator(new int[]
                {3, 1}, MapCoordinate.GenerateRandom(), 50, 2, 20);
@@ -50,7 +50,10 @@ namespace ThugLib
             CAGrowthMapGenerator cag2 = new CAGrowthMapGenerator(new int[]
                {4, 1, 2}, MapCoordinate.GenerateRandom(), 200, 8, 20);
             cag2.Run(map, fullArea, blockedList);
-            DisplayMap(map, new char[] {'#', '.', 'O', '*', '~'});
+            DungeonRoomMapGenerator drmg = new DungeonRoomMapGenerator(new int[]
+               {5, 6, 7}, MapCoordinate.GenerateRandom(), 5, 12, 20, 4);
+            drmg.Run(map, fullArea, blockedList);
+            DisplayMap(map, new char[] {'#', '.', 'O', '*', '~', 'X', ' ', '+'});
             return 0;
         }
     }

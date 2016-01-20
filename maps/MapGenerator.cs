@@ -32,6 +32,11 @@ namespace ThugLib
     {
         public int side; /* 0 1 2 3 = N E S W */
         public int offset; /* from W or N end */
+        public MapRoomDoor(int side, int offset)
+        {
+            this.side = side;
+            this.offset = offset;
+        }
     };
 
     public struct MapRoom
