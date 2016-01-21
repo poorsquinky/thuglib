@@ -5,7 +5,7 @@ using System.IO;
 
 namespace ThugLib
 {
-    public class VT100Display : Display
+    public class VT100Display : TerminalDisplay
     {
 
         public const string ESC = "\x01B";
@@ -18,9 +18,6 @@ namespace ThugLib
         {
             return ESC + "[" + row.ToString() + ";" + col.ToString() + "H";
         }
-
-        public int term_w = 80;
-        public int term_h = 24;
 
         public int map_x1 = 1;
         public int map_y1 = 4;
@@ -405,7 +402,7 @@ namespace ThugLib
             }
         }
 
-        public void ClearScreen()
+        public override void ClearScreen()
         {
             Console.Write(ESC + "[2J");
         }
@@ -425,46 +422,25 @@ namespace ThugLib
             Console.Write(CursorPosition(row,col));
         }
 
+        public override void DrawScreen()
+        {
+            ClearScreen();
+            MoveCursor(1,1);
+            for (int y = 0; y < term_h; y++)
+            {
+                for (int x = 0; x < term_w; x++)
+                {
+                    TerminalCharacter c = screenBuffer[y][x];
+                    BackgroundRGB(c.br,c.bg,c.bb);
+                    ForegroundRGB(c.r,c.g,c.b);
+                    Console.Write(c.glyph);
+                }
+                Console.Write("\n");
+            }
+        }
+
         public VT100Display()
         {
-
-            // This is just a placeholder
-
-            ClearScreen();
-            MoveCursor(3,1);
-            BackgroundRGB(0,0,0);
-            ForegroundRGB(192,0,255);
-            for (int i = 0; i < 79; i++)
-                Console.Write('-');
-            MoveCursor(3,57);
-            ForegroundRGB(255,255,192);
-            Console.Write("5 targets in range ");
-            ForegroundRGB(255,255,255);
-            Console.Write("[");
-            ForegroundRGB(192,64,64);
-            Console.Write("T");
-            ForegroundRGB(255,255,255);
-            Console.Write("]");
-
-            MoveCursor(22,1);
-            BackgroundRGB(0,0,0);
-            ForegroundRGB(192,0,255);
-            for (int i = 0; i < 79; i++)
-                Console.Write('-');
-            MoveCursor(22,61);
-            ForegroundRGB(255,255,192);
-            Console.Write("press ");
-            ForegroundRGB(255,255,255);
-            Console.Write("[");
-            ForegroundRGB(192,64,64);
-            Console.Write("?");
-            ForegroundRGB(255,255,255);
-            Console.Write("]");
-            ForegroundRGB(255,255,192);
-            Console.Write(" for help");
-            UpdateMap();
-            MoveCursor(24,1);
-
         }
     }
 }
