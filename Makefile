@@ -14,8 +14,9 @@ RunAndDisplayMap.exe: demo/RunAndDisplayMap.cs $(wildcard maps/*.cs)
 	mcs $^
 	mv demo/RunAndDisplayMap.exe .
 
-InterfaceMapDemo.exe: InterfaceMapDemo.cs $(wildcard interface/*.cs) maps/*.cs
+InterfaceMapDemo.exe: demo/InterfaceMapDemo.cs $(wildcard interface/*.cs) maps/*.cs
 	mcs $^
+	mv demo/InterfaceMapDemo.exe .
 
 .PHONY: all demos clean
 
