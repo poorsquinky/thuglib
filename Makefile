@@ -1,14 +1,14 @@
 
 all: demos
 
-demos: Display.exe RunAndDisplayMap.exe
+demos: Interface.exe RunAndDisplayMap.exe
 
 clean:
 	find . -name \*.exe -delete
 
-Display.exe:
-	mcs display/*.cs
-	mv display/Display.exe .
+Interface.exe:
+	mcs interface/*.cs
+	mv interface/Interface.exe .
 
 RunAndDisplayMap.exe:
 	mcs maps/RunAndDisplayMap.cs maps/*.cs
