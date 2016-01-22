@@ -22,6 +22,20 @@ namespace ThugLib
                 return y + h - 1;
             }
         }
+        public int xCenter
+        {
+            get
+            {
+                return x + w / 2;
+            }
+        }
+        public int yCenter
+        {
+            get
+            {
+                return y + h / 2;
+            }
+        }
         public MapRectangle(int x, int y, int w, int h)
         {
             this.x = x; this.y = y; this.w = w; this.h = h;
@@ -32,10 +46,48 @@ namespace ThugLib
     {
         public int side; /* 0 1 2 3 = N E S W */
         public int offset; /* from W or N end */
-        public MapRoomDoor(int side, int offset)
+        public MapRoom parent;
+        public int x
+        {
+            get
+            {
+                if (side == 0 || side == 2)
+                {
+                    return parent.bounds.x + offset;
+                }
+                else if (side == 1)
+                {
+                    return parent.bounds.x2;
+                }
+                else
+                {
+                    return parent.bounds.x;
+                }
+            }
+        }
+        public int y
+        {
+            get
+            {
+                if (side == 1 || side == 3)
+                {
+                    return parent.bounds.y + offset;
+                }
+                else if (side == 0)
+                {
+                    return parent.bounds.y;
+                }
+                else
+                {
+                    return parent.bounds.y2;
+                }
+            }
+        }
+        public MapRoomDoor(int side, int offset, MapRoom parent)
         {
             this.side = side;
             this.offset = offset;
+            this.parent = parent;
         }
     };
 
@@ -43,10 +95,12 @@ namespace ThugLib
     {
         public MapRectangle bounds;
         public List<MapRoomDoor> doors;
+        public bool doNotConnect;
         public MapRoom(MapRectangle bounds)
         {
             this.bounds = bounds;
             this.doors = new List<MapRoomDoor>();
+            this.doNotConnect = false;
         }
     };
 
@@ -118,6 +172,62 @@ namespace ThugLib
                 }
             }
             return mask;
+        }
+
+        public bool[][] Allocate2DBoolArray(int w, int h)
+        {
+            bool[][] retval = new bool[w][];
+            for (int i = 0; i < w; i++)
+            {
+                retval[i] = new bool[h];
+            }
+            return retval;
+        }
+
+        public void Clear2DBoolArray(bool[][] a)
+        {
+            for (int i = 0; i < a.Length; i++)
+            {
+                for (int j = 0; j < a[0].Length; j++)
+                {
+                    a[i][j] = false;
+                }
+            }
+        }
+
+        public int[][] Allocate2DIntArray(int w, int h)
+        {
+            int[][] retval = new int[w][];
+            for (int i = 0; i < w; i++)
+            {
+                retval[i] = new int[h];
+            }
+            return retval;
+        }
+
+        public void SearchAndReplace2DIntArray(int[][] a, int fromVal, int toVal)
+        {
+            for (int i = 0; i < a.Length; i++)
+            {
+                for (int j = 0; j < a[0].Length; j++)
+                {
+                    if (a[i][j] == fromVal)
+                    {
+                        a[i][j] = toVal;
+                    }
+                }
+            }
+        }
+
+        public void Clear2DIntArray(int[][] a, int clearVal)
+        {
+            for (int i = 0; i < a.Length; i++)
+            {
+                for (int j = 0; j < a[0].Length; j++)
+                {
+                    a[i][j] = clearVal;
+                }
+            }
         }
     }
 }
