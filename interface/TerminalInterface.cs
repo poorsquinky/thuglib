@@ -37,17 +37,28 @@ namespace ThugLib
             }
         }
 
-        public void DrawAt(int x, int y, string glyph)
+        public InterfaceMapElement MapElement(int x, int y, int h)
+        {
+            return new InterfaceMapElement(
+                    x1: x,
+                    y1: y,
+                    x2: term_w - 1,
+                    y2: y + h,
+                    iface: this
+            );
+        }
+
+        public override void DrawAt(int x, int y, string glyph)
         {
             DrawAt(x,y,glyph,192,192,192,0,0,0);
         }
 
-        public void DrawAt(int x, int y, string glyph, int r, int g, int b)
+        public override void DrawAt(int x, int y, string glyph, int r, int g, int b)
         {
             DrawAt(x,y,glyph,r,g,b,0,0,0);
         }
 
-        public void DrawAt(int x, int y, string glyph, int r, int g, int b, int br, int bg, int bb)
+        public override void DrawAt(int x, int y, string glyph, int r, int g, int b, int br, int bg, int bb)
         {
             foreach (char c in glyph.ToCharArray()) {
                 if (x > term_w)
