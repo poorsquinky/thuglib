@@ -11,18 +11,7 @@ namespace ThugLib
         int x1,y1,x2,y2;
         Interface iface;
 
-        public int[][] map;
-        char[] palette = new char[] {'#', '.', 'O', '*', '~', 'X', ' ', '+'};
-
-        private static int[][] AllocateMap(int w, int h)
-        {
-            int[][] map = new int[w][];
-            for (int i = 0; i < w; i++)
-            {
-                map[i] = new int[h];
-            }
-            return map;
-        }
+        public MapData map;
 
         public InterfaceMapElement(int x1, int y1, int x2, int y2, Interface iface) {
             this.x1 = x1;
@@ -30,7 +19,7 @@ namespace ThugLib
             this.y1 = y1;
             this.y2 = y2;
             this.iface = iface;
-            this.map = AllocateMap(40,40);
+            this.map = new MapData();
         }
 
         public void Draw()
@@ -39,8 +28,10 @@ namespace ThugLib
             {
                 for (int x = this.x1; x <= this.x2; x++)
                 {
-                    if ( (x < this.map.Length) && (y < this.map[x].Length) )
-                        iface.DrawAt(x,y,this.palette[this.map[x][y]].ToString(),64,64,64,0,0,0);
+                    if ( (x < this.map.grid.Length) && (y < this.map.grid[x].Length) ) {
+                        LevelSpaceType ls = this.map.palette[this.map.grid[y][x]];
+                        iface.DrawAt(x,y,ls.glyph.ToString(),ls.r,ls.g,ls.b,ls.br,ls.bg,ls.bb);
+                    }
                 }
             }
         }
