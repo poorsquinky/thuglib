@@ -1,4 +1,6 @@
 using System;
+using System.Collections;
+using System.Collections.Generic;
 
 
 namespace ThugLib
@@ -8,12 +10,27 @@ namespace ThugLib
     {
         int x1,y1,x2,y2;
         Interface iface;
+
+        public int[][] map;
+        char[] palette = new char[] {'#', '.', 'O', '*', '~', 'X', ' ', '+'};
+
+        private static int[][] AllocateMap(int w, int h)
+        {
+            int[][] map = new int[w][];
+            for (int i = 0; i < w; i++)
+            {
+                map[i] = new int[h];
+            }
+            return map;
+        }
+
         public InterfaceMapElement(int x1, int y1, int x2, int y2, Interface iface) {
             this.x1 = x1;
             this.x2 = x2;
             this.y1 = y1;
             this.y2 = y2;
             this.iface = iface;
+            this.map = AllocateMap(40,40);
         }
 
         public void Draw()
@@ -22,7 +39,8 @@ namespace ThugLib
             {
                 for (int x = this.x1; x <= this.x2; x++)
                 {
-                    iface.DrawAt(x,y,"#",64,64,64,0,0,0);
+                    if ( (x < this.map.Length) && (y < this.map[x].Length) )
+                        iface.DrawAt(x,y,this.palette[this.map[x][y]].ToString(),64,64,64,0,0,0);
                 }
             }
         }

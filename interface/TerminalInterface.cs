@@ -61,7 +61,7 @@ namespace ThugLib
         public override void DrawAt(int x, int y, string glyph, int r, int g, int b, int br, int bg, int bb)
         {
             foreach (char c in glyph.ToCharArray()) {
-                if (x > term_w)
+                if ((x >= term_w) || (y >= term_h))
                     return;
                 TerminalCharacter buf = screenBuffer[y][x];
                 buf.glyph = c.ToString();
