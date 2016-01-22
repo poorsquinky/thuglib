@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace ThugLib
 {
-    public class TerminalDisplay : Display
+    public class TerminalInterface : Interface
     {
         public struct TerminalCharacter
         {
@@ -83,7 +83,7 @@ namespace ThugLib
             }
         }
 
-        public TerminalDisplay()
+        public TerminalInterface()
         {
             InitializeBuffers();
         }

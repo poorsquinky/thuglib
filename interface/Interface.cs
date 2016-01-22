@@ -3,9 +3,9 @@ using System;
 
 namespace ThugLib
 {
-    public abstract class Display
+    public abstract class Interface
     {
-        public Display()
+        public Interface()
         {
         }
     }
