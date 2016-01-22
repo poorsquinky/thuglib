@@ -6,11 +6,11 @@ demos: InterfaceDemo.exe RunAndDisplayMap.exe
 clean:
 	find . -name \*.exe -delete
 
-InterfaceDemo.exe:
+InterfaceDemo.exe: $(wildcard interface/I.cs)
 	mcs interface/InterfaceDemo.cs interface/*.cs
-	mv interface/Interface.exe .
+	mv interface/InterfaceDemo.exe .
 
-RunAndDisplayMap.exe:
+RunAndDisplayMap.exe: $(wildcard maps/*.cs)
 	mcs maps/RunAndDisplayMap.cs maps/*.cs
 	mv maps/RunAndDisplayMap.exe .
 
