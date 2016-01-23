@@ -1,22 +1,22 @@
 
 all: demos
 
-demos: InterfaceDemo.exe RunAndDisplayMap.exe InterfaceMapDemo.exe
+demos: UIDemo.exe RunAndDisplayMap.exe UIMapDemo.exe
 
 clean:
 	find . -name \*.exe -delete
 
-InterfaceDemo.exe: demo/InterfaceDemo.cs $(wildcard interface/*.cs)
+UIDemo.exe: demo/UIDemo.cs $(wildcard ui/*.cs)
 	mcs $^
-	mv demo/InterfaceDemo.exe .
+	mv demo/UIDemo.exe .
 
 RunAndDisplayMap.exe: demo/RunAndDisplayMap.cs $(wildcard maps/*.cs)
 	mcs $^
 	mv demo/RunAndDisplayMap.exe .
 
-InterfaceMapDemo.exe: demo/InterfaceMapDemo.cs $(wildcard interface/*.cs) $(wildcard maps/*.cs)
+UIMapDemo.exe: demo/UIMapDemo.cs $(wildcard ui/*.cs) $(wildcard maps/*.cs)
 	mcs $^
-	mv demo/InterfaceMapDemo.exe .
+	mv demo/UIMapDemo.exe .
 
 .PHONY: all demos clean
 

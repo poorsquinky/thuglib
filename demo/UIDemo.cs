@@ -3,12 +3,12 @@ using System;
 
 namespace ThugLib
 {
-    public class InterfaceDemo
+    public class UIDemo
     {
         static public void Main ()
         {
-            //Interface d = new VT100Interface();
-            VT100Interface d = new VT100Interface();
+            //UI d = new VT100UI();
+            VT100UI d = new VT100UI();
 
             // This is just a placeholder
 

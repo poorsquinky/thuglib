@@ -5,7 +5,7 @@ using System.IO;
 
 namespace ThugLib
 {
-    public class VT100Interface : TerminalInterface
+    public class VT100UI : TerminalUI
     {
 
         public const string ESC = "\x01B";
@@ -439,7 +439,7 @@ namespace ThugLib
             }
         }
 
-        public VT100Interface()
+        public VT100UI()
         {
         }
     }

@@ -6,12 +6,12 @@ using System.Collections.Generic;
 namespace ThugLib
 {
 
-    public class InterfaceMapDemo
+    public class UIMapDemo
     {
         static public void Main ()
         {
-            //Interface d = new VT100Interface();
-            VT100Interface d = new VT100Interface();
+            //UI d = new VT100UI();
+            VT100UI d = new VT100UI();
 
             // This is just a placeholder
 
@@ -25,7 +25,7 @@ namespace ThugLib
                 d.DrawAt(x,22," ",0,0,0,0,0,64);
             }
 
-            InterfaceMapElement map_element = d.MapElement(
+            UIMapElement map_element = d.MapElement(
                     x: 0,
                     y: 4,
                     h: 17

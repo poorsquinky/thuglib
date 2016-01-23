@@ -6,19 +6,19 @@ using System.Collections.Generic;
 namespace ThugLib
 {
 
-    public class InterfaceMapElement
+    public class UIMapElement
     {
         int x1,y1,x2,y2;
-        Interface iface;
+        UI ui;
 
         public MapData map;
 
-        public InterfaceMapElement(int x1, int y1, int x2, int y2, Interface iface) {
+        public UIMapElement(int x1, int y1, int x2, int y2, UI ui) {
             this.x1 = x1;
             this.x2 = x2;
             this.y1 = y1;
             this.y2 = y2;
-            this.iface = iface;
+            this.ui = ui;
             this.map = new MapData();
         }
 
@@ -30,16 +30,16 @@ namespace ThugLib
                 {
                     if ( (x < this.map.grid.Length) && (y < this.map.grid[x].Length) ) {
                         LevelSpaceType ls = this.map.palette[this.map.grid[y][x]];
-                        iface.DrawAt(x,y,ls.glyph.ToString(),ls.r,ls.g,ls.b,ls.br,ls.bg,ls.bb);
+                        ui.DrawAt(x,y,ls.glyph.ToString(),ls.r,ls.g,ls.b,ls.br,ls.bg,ls.bb);
                     }
                 }
             }
         }
     }
 
-    public abstract class Interface
+    public abstract class UI
     {
-        public Interface()
+        public UI()
         {
         }
 
