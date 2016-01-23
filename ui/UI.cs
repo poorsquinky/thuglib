@@ -32,7 +32,6 @@ namespace ThugLib
                 int map_y    = y + this.offset_y - 9;
                 for (int x = 0; x <= this.x2 - this.x1; x++)
                 {
-                    // XXX consider having offset_x point to center
                     int screen_x = x + this.x1;
                     int map_x    = x + this.offset_x - 40;
 
@@ -46,7 +45,7 @@ namespace ThugLib
                         MapSpaceType ms = this.map.palette[this.map.grid[map_x][map_y]];
                         ui.DrawAt(screen_x,screen_y,ms.glyph.ToString(),ms.r,ms.g,ms.b,ms.br,ms.bg,ms.bb);
                     } else {
-                        ui.DrawAt(screen_x,screen_y,"#",64,64,64,0,0,0);
+                        ui.DrawAt(screen_x,screen_y,"#",48,48,48,0,0,0);
                     }
 
                 }

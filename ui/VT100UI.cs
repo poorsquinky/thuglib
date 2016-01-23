@@ -315,6 +315,15 @@ namespace ThugLib
                 }
             }
 
+            if ((r == g) && (g == b)) {
+                int compare = r + 4; // center the threshold between shades
+                if (r < 4)
+                    return 0;
+                for ( int i = 232; i < 256; i++)
+                    if (compare < ColorTable[i].r)
+                        return i;
+            }
+
             // no exact match found? Try the next closest thing
             r = NearestColorIncrement(r);
             g = NearestColorIncrement(g);
