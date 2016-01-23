@@ -10,6 +10,7 @@ namespace ThugLib
     {
         int x1,y1,x2,y2;
         UI ui;
+        int offset_x = 35, offset_y = 6;
 
         public MapData map;
 
@@ -24,14 +25,30 @@ namespace ThugLib
 
         public void Draw()
         {
-            for (int y = this.y1; y <= this.y2; y++)
+
+            for (int y = 0; y <= this.y2 - this.y1; y++)
             {
-                for (int x = this.x1; x <= this.x2; x++)
+                int screen_y = y + this.y1;
+                int map_y    = y + this.offset_y - 9;
+                for (int x = 0; x <= this.x2 - this.x1; x++)
                 {
-                    if ( (x < this.map.grid.Length) && (y < this.map.grid[x].Length) ) {
-                        MapSpaceType ms = this.map.palette[this.map.grid[y][x]];
-                        ui.DrawAt(x,y,ms.glyph.ToString(),ms.r,ms.g,ms.b,ms.br,ms.bg,ms.bb);
+                    // XXX consider having offset_x point to center
+                    int screen_x = x + this.x1;
+                    int map_x    = x + this.offset_x - 40;
+
+                    if (
+                            (map_x >= 0) &&
+                            (map_y >= 0) &&
+                            (map_x < this.map.grid.Length) &&
+                            (map_y < this.map.grid[map_x].Length) &&
+                            (this.map.grid[map_x][map_y] < this.map.palette.Count) )
+                    {
+                        MapSpaceType ms = this.map.palette[this.map.grid[map_x][map_y]];
+                        ui.DrawAt(screen_x,screen_y,ms.glyph.ToString(),ms.r,ms.g,ms.b,ms.br,ms.bg,ms.bb);
+                    } else {
+                        ui.DrawAt(screen_x,screen_y,"#",64,64,64,0,0,0);
                     }
+
                 }
             }
         }
