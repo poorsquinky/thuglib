@@ -98,9 +98,9 @@ namespace ThugLib
                 for (int j = 0; j < nDoors; j++)
                 {
                     int side = NextRandom(0, 4);
-                    r.doors.Add(new MapRoomDoor(side,
-                       NextRandom(1, ((side == 0 || side == 2) ? 
-                       r.bounds.w : r.bounds.h)) - 1));
+                    int offset = NextRandom(1, ((side == 0 || side == 2) ? 
+                       r.bounds.w : r.bounds.h) - 1);
+                    r.doors.Add(new MapRoomDoor(side, offset, r));
                 }
                 // clean out any duplicated doors
                 for (int j = r.doors.Count - 1; j > 0; j--)

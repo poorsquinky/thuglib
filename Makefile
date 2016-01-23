@@ -1,7 +1,8 @@
 
 all: demos
 
-demos: UIDemo.exe RunAndDisplayMap.exe UIMapDemo.exe
+#demos: UIDemo.exe RunAndDisplayMap.exe UIMapDemo.exe
+demos: RunAndDisplayMap.exe UIMapDemo.exe
 
 clean:
 	find . -name \*.exe -delete
