@@ -29,8 +29,8 @@ namespace ThugLib
                 for (int x = this.x1; x <= this.x2; x++)
                 {
                     if ( (x < this.map.grid.Length) && (y < this.map.grid[x].Length) ) {
-                        LevelSpaceType ls = this.map.palette[this.map.grid[y][x]];
-                        ui.DrawAt(x,y,ls.glyph.ToString(),ls.r,ls.g,ls.b,ls.br,ls.bg,ls.bb);
+                        MapSpaceType ms = this.map.palette[this.map.grid[y][x]];
+                        ui.DrawAt(x,y,ms.glyph.ToString(),ms.r,ms.g,ms.b,ms.br,ms.bg,ms.bb);
                     }
                 }
             }

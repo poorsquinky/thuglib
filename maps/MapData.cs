@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace ThugLib
 {
-    public class LevelSpaceType
+    public class MapSpaceType
     {
         public char glyph         = '#';
         public bool passable      = false;
@@ -22,10 +22,20 @@ namespace ThugLib
     public class MapData
     {
         public int[][] grid;
-        public List<LevelSpaceType> palette = new List<LevelSpaceType>();
+        public List<MapSpaceType> palette = new List<MapSpaceType>();
+
+        public MapData(int w, int h)
+        {
+            this.grid = new int[w][];
+            for (int i = 0; i < w; i++)
+            {
+                this.grid[i] = new int[h];
+            }
+        }
 
         public MapData()
         {
+            // XXX this placeholder map is going away soon
             this.grid     = new int[20][];
             this.grid[0]  = new int[20] {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1};
             this.grid[1]  = new int[20] {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1};
@@ -48,8 +58,8 @@ namespace ThugLib
             this.grid[18] = new int[20] {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1};
             this.grid[19] = new int[20] {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1};
 
-            LevelSpaceType open = new LevelSpaceType();
-            LevelSpaceType wall = new LevelSpaceType();
+            MapSpaceType open = new MapSpaceType();
+            MapSpaceType wall = new MapSpaceType();
 
             open.glyph       = '.';
             open.passable    = true;
@@ -57,6 +67,31 @@ namespace ThugLib
 
             this.palette.Add(open);
             this.palette.Add(wall);
+        }
+
+        public void AddSpaceType(
+                char glyph,
+                bool passable      = true,
+                string description = "",
+                int r              = 128,
+                int g              = 128,
+                int b              = 128,
+                int br             = 0,
+                int bg             = 0,
+                int bb             = 0)
+        {
+            MapSpaceType st = new MapSpaceType();
+            st.glyph = glyph;
+            st.passable = passable;
+            st.description = description;
+            st.r = r;
+            st.g = g;
+            st.b = b;
+            st.br = br;
+            st.bg = bg;
+            st.bb = bb;
+
+            this.palette.Add(st);
         }
 
     }
