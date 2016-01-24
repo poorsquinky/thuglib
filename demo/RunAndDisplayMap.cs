@@ -100,6 +100,16 @@ namespace ThugLib
                 mapdata.AddSpaceType(glyph: ' ');
                 mapdata.AddSpaceType(glyph: '+');
             }
+            else if (args[0] == "-line")
+            {
+                Path path = PathUtils.GetBresenhamPath(0, 1, 6, 4, null);
+                Console.WriteLine("Path from 0, 1 to 6, 4");
+                PathUtils.PrintPath(path, 0, 1);
+                PathUtils.GetBresenhamPath(-3, 1, -4, 9, path);
+                Console.WriteLine("Path from -3, 1 to -4, 9");
+                PathUtils.PrintPath(path, -3, 1);
+                return 0;
+            }
             else
             {
                 Console.WriteLine("Specify -cave, -dungeon, or -office");
