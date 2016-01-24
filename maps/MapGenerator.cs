@@ -8,6 +8,12 @@ namespace ThugLib
     {
         public int x, y; /* upper left corner */
         public int w, h;
+
+        public override String ToString()
+        {
+            return "[ " + x + ", " + y + " - " + x2 + ", " + y2 + " ]";
+        }
+
         public int x2
         {
            get

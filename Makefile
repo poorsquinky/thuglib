@@ -8,15 +8,15 @@ clean:
 	find . -name \*.exe -delete
 
 UIDemo.exe: demo/UIDemo.cs $(wildcard ui/*.cs)
-	mcs $^
+	mcs -debug $^
 	mv demo/UIDemo.exe .
 
 RunAndDisplayMap.exe: demo/RunAndDisplayMap.cs $(wildcard maps/*.cs)
-	mcs $^
+	mcs -debug $^
 	mv demo/RunAndDisplayMap.exe .
 
 UIMapDemo.exe: demo/UIMapDemo.cs $(wildcard ui/*.cs) $(wildcard maps/*.cs)
-	mcs $^
+	mcs -debug $^
 	mv demo/UIMapDemo.exe .
 
 .PHONY: all demos clean
