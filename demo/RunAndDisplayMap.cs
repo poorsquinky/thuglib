@@ -91,10 +91,6 @@ namespace ThugLib
                 CAGrowthMapGenerator cag2 = new CAGrowthMapGenerator(new int[]
                    {4, 1, 2}, MapCoordinate.GenerateRandom(), 200, 8, 20);
                 cag2.Run(mapdata.grid, fullArea, blockedList);
-                DungeonRoomMapGenerator drmg = new DungeonRoomMapGenerator(new
-                   int[] {5, 6, 7}, MapCoordinate.GenerateRandom(),
-                   5, 12, 20, 4);
-                drmg.Run(mapdata.grid, fullArea, blockedList);
                 mapdata.AddSpaceType(glyph: '#');
                 mapdata.AddSpaceType(glyph: '.');
                 mapdata.AddSpaceType(glyph: 'O');
