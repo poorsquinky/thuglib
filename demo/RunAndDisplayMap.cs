@@ -117,6 +117,14 @@ namespace ThugLib
                 int length = PathUtils.CalculateBresenhamProductSquareToSquare(
                    0, 1, 6, 4, mapdata.grid, (x, y) => x + y, 0);
                 Console.WriteLine("Length (0, 1) -> (6, 4) in steps = " + length);
+                
+                MapData distance = new MapData(40, 40);
+                PathUtils.CalculateBresenhamProductsToRectangle(5, 5, mapdata.grid,
+                   fullArea, (x, y) => x + y, 0, distance.grid);
+                for (int i = 0; i < 20; i++)
+                {
+                    Console.WriteLine("3 " + i + " dist = " + distance.grid[3][i]);
+                }
                 return 0;
             }
             else
