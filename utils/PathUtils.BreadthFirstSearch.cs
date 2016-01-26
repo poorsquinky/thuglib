@@ -10,6 +10,8 @@ namespace ThugLib
 
         public delegate int StepCost(int x, int y);
 
+        public delegate int DirectedStepCost(int x, int y, eStep direction);
+
         private static int[][] bestCost;
 
         private static eStep[][] visitedFrom;
@@ -17,7 +19,7 @@ namespace ThugLib
         // returns a Path if there is one or null if not
         // default to allow diagonal steps
         public static Path BFSPath(int xStart, int yStart, int xEnd, int yEnd,
-           CanStep stepFrom, CanStep stepTo, StepCost costFrom, StepCost costTo,
+           CanStep stepFrom, CanStep stepTo, StepCost costFrom, DirectedStepCost costTo,
            MapRectangle limits)
         {
             return BFSPath(xStart, yStart, xEnd, yEnd, stepFrom, stepTo,
@@ -26,7 +28,7 @@ namespace ThugLib
 
         // returns a Path if there is one or null if not
         public static Path BFSPath(int xStart, int yStart, int xEnd, int yEnd,
-           CanStep stepFrom, CanStep stepTo, StepCost costFrom, StepCost costTo,
+           CanStep stepFrom, CanStep stepTo, StepCost costFrom, DirectedStepCost costTo,
            MapRectangle limits, bool allowDiagonalSteps)
         {
             bool debug = false;
@@ -106,7 +108,7 @@ namespace ThugLib
                                 int newCost = baseCost;
                                 if (costTo != null)
                                 {
-                                    newCost += costTo(xNew, yNew);
+                                    newCost += costTo(xNew, yNew, (eStep)j);
                                 }
                                 int dx = xNew - limits.x;
                                 int dy = yNew - limits.y;

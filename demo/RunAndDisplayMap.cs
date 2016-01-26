@@ -145,8 +145,8 @@ namespace ThugLib
                 int xEnd = allRooms[1].bounds.xCenter;
                 int yEnd = allRooms[1].bounds.yCenter;
                 Path path = PathUtils.BFSPath(xStart, yStart, xEnd, yEnd, null, 
-                   (x, y) => (mapdata.grid[x][y] >= 6), null, (x, y) => 1,
-                   fullArea);
+                   (x, y) => (mapdata.grid[x][y] >= 6), null, (x, y, d) => 
+                   ((((int)d) % 2) == 1 ? 140 : 100), fullArea);
                 if (path != null)
                 {
                     int[][] pathSquares = PathUtils.UnrollPath(path, xStart, yStart);
