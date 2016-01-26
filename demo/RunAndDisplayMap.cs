@@ -108,6 +108,15 @@ namespace ThugLib
                 PathUtils.GetBresenhamPath(-3, 1, -4, 9, path);
                 Console.WriteLine("Path from -3, 1 to -4, 9");
                 PathUtils.PrintPath(path, -3, 1);
+
+                gen = new ClearMapGenerator(new int[] {1, 1},
+                   MapCoordinate.GenerateRandom());
+                fullArea = new MapRectangle(0, 0, 40, 40);
+                mapdata = new MapData(40, 40);
+                gen.Run(mapdata.grid, fullArea, null);
+                int length = PathUtils.CalculateBresenhamProductSquareToSquare(
+                   0, 1, 6, 4, mapdata.grid, (x, y) => x + y, 0);
+                Console.WriteLine("Length (0, 1) -> (6, 4) in steps = " + length);
                 return 0;
             }
             else

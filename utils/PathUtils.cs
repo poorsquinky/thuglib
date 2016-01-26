@@ -153,6 +153,43 @@ namespace ThugLib
             return fillPath;
         }
 
+        public delegate int UpdateProductForSquare(int product, int square);
+
+        public static int CalculateBresenhamProductSquareToSquare(int x1,
+           int y1, int x2, int y2, int[][] map, UpdateProductForSquare update,
+           int startingProduct)
+        {
+            return CalculateBresenhamProductSquareToSquare(x1, y1, x2, y2, map,
+               update, startingProduct, false, true);
+        }
+
+        public static int CalculateBresenhamProductSquareToSquare(int x1,
+           int y1, int x2, int y2, int[][] map, UpdateProductForSquare update,
+           int startingProduct, bool includeFirstSquare, bool includeLastSquare)
+        {
+            x1 = MathUtils.Limit(x1, 0, map.Length - 1);
+            y1 = MathUtils.Limit(y1, 0, map[0].Length - 1);
+            x2 = MathUtils.Limit(x2, 0, map.Length - 1);
+            y2 = MathUtils.Limit(y2, 0, map[0].Length - 1);
+            Path path = GetBresenhamPath(x1, y1, x2, y2, null);
+            int product = startingProduct;
+            int x = x1, y = y1;
+            for (int i = 0; i < path.NSteps; i++)
+            {
+                if (i != 0 || includeFirstSquare)
+                {
+                    product = update(product, map[x][y]);
+                }
+                x += StepDX[(int)path.Steps[i]];
+                y += StepDY[(int)path.Steps[i]];
+            }
+            if (includeLastSquare)
+            {
+                product = update(product, map[x][y]);
+            }
+            return product;
+        }
+
         public static void PrintPath(Path fillPath, int x1, int y1)
         {
             int x = x1, y = y1;
