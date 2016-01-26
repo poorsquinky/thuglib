@@ -127,6 +127,49 @@ namespace ThugLib
                 }
                 return 0;
             }
+            else if (args[0] == "-bfs")
+            {
+                DungeonRoomMapGenerator drmg = new DungeonRoomMapGenerator(new
+                   int[] {5, 6, 7}, MapCoordinate.GenerateRandom(),
+                   5, 12, 10, 3);
+                List<MapRoom> allRooms = drmg.Run(mapdata.grid, fullArea,
+                   blockedList);
+                DungeonCorridorMapGenerator dcmg = new
+                   DungeonCorridorMapGenerator(
+                   new int[] {5, 6, 7}, MapCoordinate.GenerateRandom(), 2,
+                   new int[] {0, 100000, 100000, 0, 0, 100000, 0, 0});
+                dcmg.Run(mapdata.grid, fullArea, allRooms);
+
+                int xStart = allRooms[0].bounds.xCenter;
+                int yStart = allRooms[0].bounds.yCenter;
+                int xEnd = allRooms[1].bounds.xCenter;
+                int yEnd = allRooms[1].bounds.yCenter;
+                Path path = PathUtils.BFSPath(xStart, yStart, xEnd, yEnd, null, 
+                   (x, y) => (mapdata.grid[x][y] >= 6), null, (x, y) => 1,
+                   fullArea);
+                if (path != null)
+                {
+                    int[][] pathSquares = PathUtils.UnrollPath(path, xStart, yStart);
+                    for (int i = 0; i < pathSquares.Length; i++)
+                    {
+                        mapdata.grid[pathSquares[i][0]][pathSquares[i][1]] = 8;
+                    }
+                }
+                mapdata.grid[xStart][yStart] = 9;
+                mapdata.grid[xEnd][yEnd] = 10;
+
+                mapdata.AddSpaceType(glyph: '#');
+                mapdata.AddSpaceType(glyph: '#');
+                mapdata.AddSpaceType(glyph: '#');
+                mapdata.AddSpaceType(glyph: '*');
+                mapdata.AddSpaceType(glyph: '~');
+                mapdata.AddSpaceType(glyph: '#');
+                mapdata.AddSpaceType(glyph: ' ');
+                mapdata.AddSpaceType(glyph: '+');
+                mapdata.AddSpaceType(glyph: 'v');
+                mapdata.AddSpaceType(glyph: 'S');
+                mapdata.AddSpaceType(glyph: 'E');
+            }
             else
             {
                 Console.WriteLine("Specify -cave, -dungeon, or -office");

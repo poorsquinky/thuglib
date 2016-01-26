@@ -13,6 +13,13 @@ namespace ThugLib
             b = swap;
         }
 
+        public static void Swap(ref List<int> a, ref List<int> b)
+        {
+            List<int> swap = a;
+            a = b;
+            b = swap;
+        }
+
         public static int Limit(int a, int low, int high)
         {
             if (a < low) a = low;
