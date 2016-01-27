@@ -10,7 +10,7 @@ public class PlayerScript : MonoBehaviour {
     private Vector3 movingTo   = new Vector3(0,0,0);
 
     private long keyDownHoldStart = 0L; // in 100-ns ticks
-    private const long keyDownTimeToRepeatInMS = 300;
+    private const long keyDownTimeToRepeatInMS = 200;
     private const long keyDownRepeatIntervalInMS = 100;
     private const long TICKS_PER_MS = 10000;
     private bool keyIsDown = false;
@@ -76,10 +76,7 @@ public class PlayerScript : MonoBehaviour {
                 {
                     possible_v = -1;
                 }
-                if (Input.GetKey(KeyCode.LeftArrow) ||
-                   Input.GetKey(KeyCode.RightArrow) ||
-                   Input.GetKey(KeyCode.UpArrow) ||
-                   Input.GetKey(KeyCode.DownArrow))
+                if (possible_h != 0 || possible_v != 0)
                 {
                     long currentTick = Environment.TickCount;
                     if (!keyIsRepeating &&
