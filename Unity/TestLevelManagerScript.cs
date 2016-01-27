@@ -8,17 +8,27 @@ public class TestLevelManagerScript : MonoBehaviour {
     public int levelWidth=40;
     public int levelHeight=40;
 
+    public GameObject playerPrefab;
+    public GameObject cameraPrefab;
+
     public List<GameObject> tilePrefabs;
 
     private List<List<Object>> tileGrid = new List<List<Object>>();
+    private GameObject player;
+
+    public MapData mapdata;
 
     // Use this for initialization
     void Start () {
 
+        int player_x = 0;
+        int player_y = 0;
+
+        mapdata = new MapData(levelWidth,levelHeight);
+
         ClearMapGenerator gen = new ClearMapGenerator(new int[] {0, 0},
            MapCoordinate.GenerateRandom());
 
-        MapData mapdata = new MapData(40, 40);
         ClearMapGenerator gen2 = new ClearMapGenerator(new int[] {2, 1},
            MapCoordinate.GenerateRandom());
         gen2.Run(mapdata.grid, new MapRectangle(10, 10, 10, 10), null);
@@ -74,15 +84,23 @@ public class TestLevelManagerScript : MonoBehaviour {
             tileGrid.Add(new List<Object>());
             for (int j = 0; j < levelWidth; j++)
             {
+
+                // XXX this is profoundly dumb -- we're just assigning the player coords to the last passable square.  But it's temporary.
+                if (mapdata.palette[mapdata.grid[j][i]].passable)
+                {
+                    player_x = j;
+                    player_y = i;
+                }
+
                 // special case for doors :(  -- they need a floor.
                 if (mapdata.grid[j][i] == 7)
                 {
                     var flr = Instantiate(this.tilePrefabs[6]) as GameObject;
-                    flr.transform.position = new Vector3(j - levelWidth / 2, i - levelHeight / 2, 1);
+                    flr.transform.position = new Vector3(j, i, 1);
                 }
 
                 var o = Instantiate(this.tilePrefabs[mapdata.grid[j][i]]) as GameObject;
-                o.transform.position = new Vector3(j - levelWidth / 2, i - levelHeight / 2, 0);
+                o.transform.position = new Vector3(j, i, 0);
                 var sts = o.GetComponent<ShapeTerrainScript>();
                 if (sts)
                 {
@@ -114,6 +132,17 @@ public class TestLevelManagerScript : MonoBehaviour {
                 tileGrid[i].Add(o);
             }
         }
+
+        this.player = Instantiate(this.playerPrefab) as GameObject;
+        Vector3 pos = new Vector3(player_x, player_y, 0);
+        this.player.transform.position = pos;
+        this.player.transform.SetParent(transform);
+
+        GameObject camera = Instantiate( cameraPrefab );
+        pos.z=-10;
+        camera.transform.position = pos;
+        camera.transform.SetParent(this.player.transform);
+
     }
 
     // Update is called once per frame
