@@ -13,8 +13,8 @@ public class TestLevelManagerScript : MonoBehaviour {
 
     public List<GameObject> tilePrefabs;
 
-    private List<List<Object>> tileGrid = new List<List<Object>>();
-    private List<List<Object>> subTileGrid = new List<List<Object>>();
+    private List<List<GameObject>> tileGrid = new List<List<GameObject>>();
+    private List<List<GameObject>> subTileGrid = new List<List<GameObject>>();
     private GameObject player;
 
     public MapData mapdata;
@@ -84,8 +84,8 @@ public class TestLevelManagerScript : MonoBehaviour {
 
         for (int i = 0; i < levelHeight; i++)
         {
-            tileGrid.Add(new List<Object>());
-            subTileGrid.Add(new List<Object>());
+            tileGrid.Add(new List<GameObject>());
+            subTileGrid.Add(new List<GameObject>());
             for (int j = 0; j < levelWidth; j++)
             {
 
@@ -176,7 +176,7 @@ public class TestLevelManagerScript : MonoBehaviour {
         {
             isFirstUpdate = false;
             lastVisibilityUpdatePlayerPos = this.player.transform.position;
- 
+
             // generate a visibility map for the entire level
 
             int playerX = MathUtils.RoundToInt(lastVisibilityUpdatePlayerPos.x);
@@ -185,21 +185,23 @@ public class TestLevelManagerScript : MonoBehaviour {
                mapdata.grid, fullMapBounds, (previous, tileIndex) => 
                ((previous == 0 || !mapdata.palette[tileIndex].transparent) ?
                0 : 1), 1, false, true, latestVisibility);
-               
+
             // load the current player visibility map into the tileGrid
 
             for (int i = 0; i < fullMapBounds.w; i++)
             {
                 for (int j = 0; j < fullMapBounds.h; j++)
                 { 
-                    // ERIK - here you can
-                    //    if (wasEverVisible[i][j]) grey it out instead
-                    ((GameObject)tileGrid[j][i]).
-                       GetComponent<SpriteRenderer>().enabled = false;
+                    if (wasEverVisible[i][j])
+                        tileGrid[j][i].GetComponent<SpriteRenderer>().color = new Color(1f,1f,1f,0.5f);
+                    else
+                        tileGrid[j][i].GetComponent<SpriteRenderer>().color = new Color(1f,1f,1f,0f);
                     if (subTileGrid[j][i] != null)
                     {
-                        ((GameObject)subTileGrid[j][i]).
-                           GetComponent<SpriteRenderer>().enabled = false;
+                        if (wasEverVisible[i][j])
+                            subTileGrid[j][i].GetComponent<SpriteRenderer>().color = new Color(1f,1f,1f,0.5f);
+                        else
+                            subTileGrid[j][i].GetComponent<SpriteRenderer>().color = new Color(1f,1f,1f,0f);
                     }
                 }
             }
@@ -218,14 +220,10 @@ public class TestLevelManagerScript : MonoBehaviour {
                                    i + di < tileGrid[0].Count)
                                 {
                                     wasEverVisible[i][j] = true;
-                                    ((GameObject)tileGrid[j + dj][i + di]).
-                                       GetComponent<SpriteRenderer>().enabled =
-                                       true;
+                                    tileGrid[j + dj][i + di].GetComponent<SpriteRenderer>().color = new Color(1f,1f,1f,1f);
                                     if (subTileGrid[j + dj][i + di] != null)
                                     {
-                                    ((GameObject)subTileGrid[j + dj][i + di]).
-                                       GetComponent<SpriteRenderer>().enabled =
-                                       true;
+                                        subTileGrid[j + dj][i + di].GetComponent<SpriteRenderer>().color = new Color(1f,1f,1f,1f);
                                     }
                                 }
                             }
