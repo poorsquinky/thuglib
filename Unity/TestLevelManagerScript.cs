@@ -141,7 +141,7 @@ public class TestLevelManagerScript : MonoBehaviour {
         GameObject camera = Instantiate( cameraPrefab );
         pos.z=-10;
         camera.transform.position = pos;
-        camera.transform.SetParent(this.player.transform);
+        camera.GetComponent<CameraScript>().target = this.player.transform;
 
     }
 
