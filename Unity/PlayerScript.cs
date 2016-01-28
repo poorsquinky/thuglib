@@ -34,7 +34,7 @@ public class PlayerScript : MonoBehaviour {
                 movingTo.x -= 1;
                 x -= 1;
             }
-            else if ((h > 0.0f) && (x < lm.levelWidth) &&  (lm.mapdata.palette[lm.mapdata.grid[x+1][y]].passable))
+            else if ((h > 0.0f) && (x < lm.levelWidth - 1) &&  (lm.mapdata.palette[lm.mapdata.grid[x+1][y]].passable))
             {
                 movingTo.x += 1;
                 x += 1;
@@ -44,7 +44,7 @@ public class PlayerScript : MonoBehaviour {
             {
                 movingTo.y -= 1;
             }
-            else if ((v > 0.0f) && (y < lm.levelHeight) &&  (lm.mapdata.palette[lm.mapdata.grid[x][y+1]].passable))
+            else if ((v > 0.0f) && (y < lm.levelHeight - 1) &&  (lm.mapdata.palette[lm.mapdata.grid[x][y+1]].passable))
             {
                 movingTo.y += 1;
             }
