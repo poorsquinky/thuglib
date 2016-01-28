@@ -14,6 +14,7 @@ public class TestLevelManagerScript : MonoBehaviour {
     public List<GameObject> tilePrefabs;
 
     private List<List<Object>> tileGrid = new List<List<Object>>();
+    private List<List<Object>> subTileGrid = new List<List<Object>>();
     private GameObject player;
 
     public MapData mapdata;
@@ -84,6 +85,7 @@ public class TestLevelManagerScript : MonoBehaviour {
         for (int i = 0; i < levelHeight; i++)
         {
             tileGrid.Add(new List<Object>());
+            subTileGrid.Add(new List<Object>());
             for (int j = 0; j < levelWidth; j++)
             {
 
@@ -99,6 +101,11 @@ public class TestLevelManagerScript : MonoBehaviour {
                 {
                     var flr = Instantiate(this.tilePrefabs[6]) as GameObject;
                     flr.transform.position = new Vector3(j, i, 1);
+                    subTileGrid[i].Add(flr);
+                }
+                else
+                {
+                    subTileGrid[i].Add(null);
                 }
 
                 var o = Instantiate(this.tilePrefabs[mapdata.grid[j][i]]) as GameObject;
@@ -184,6 +191,11 @@ public class TestLevelManagerScript : MonoBehaviour {
                 {
                     ((GameObject)tileGrid[j][i]).
                        GetComponent<SpriteRenderer>().enabled = false;
+                    if (subTileGrid[j][i] != null)
+                    {
+                        ((GameObject)subTileGrid[j][i]).
+                           GetComponent<SpriteRenderer>().enabled = false;
+                    }
                 }
             }
             for (int i = 0; i < fullMapBounds.w; i++)
@@ -203,6 +215,12 @@ public class TestLevelManagerScript : MonoBehaviour {
                                     ((GameObject)tileGrid[j + dj][i + di]).
                                        GetComponent<SpriteRenderer>().enabled =
                                        true;
+                                    if (subTileGrid[j + dj][i + di] != null)
+                                    {
+                                    ((GameObject)subTileGrid[j + dj][i + di]).
+                                       GetComponent<SpriteRenderer>().enabled =
+                                       true;
+                                    }
                                 }
                             }
                         }
