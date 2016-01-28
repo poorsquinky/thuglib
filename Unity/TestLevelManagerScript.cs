@@ -14,9 +14,11 @@ public class TestLevelManagerScript : MonoBehaviour {
     public List<GameObject> tilePrefabs;
 
     private List<List<Object>> tileGrid = new List<List<Object>>();
+    private List<List<Object>> subTileGrid = new List<List<Object>>();
     private GameObject player;
 
     public MapData mapdata;
+    public MapRectangle fullMapBounds;
 
     // Use this for initialization
     void Start () {
@@ -25,6 +27,7 @@ public class TestLevelManagerScript : MonoBehaviour {
         int player_y = 0;
 
         mapdata = new MapData(levelWidth,levelHeight);
+        fullMapBounds = new MapRectangle(0, 0, levelWidth, levelHeight);
 
         ClearMapGenerator gen = new ClearMapGenerator(new int[] {0, 0},
            MapCoordinate.GenerateRandom());
@@ -48,14 +51,14 @@ public class TestLevelManagerScript : MonoBehaviour {
            new int[] {0, 100000, 100000, 0, 0, 100000, 0, 0});
         dcmg.Run(mapdata.grid, fullArea, allRooms);
 
-        mapdata.AddSpaceType(glyph: '#', passable: false);
-        mapdata.AddSpaceType(glyph: '#', passable: false);
-        mapdata.AddSpaceType(glyph: '#', passable: false);
-        mapdata.AddSpaceType(glyph: '*', passable: true);
-        mapdata.AddSpaceType(glyph: '~', passable: true);
-        mapdata.AddSpaceType(glyph: '#', passable: false);
-        mapdata.AddSpaceType(glyph: ' ', passable: true);
-        mapdata.AddSpaceType(glyph: '+', passable: true);
+        mapdata.AddSpaceType(glyph: '#', passable: false, transparent: false);
+        mapdata.AddSpaceType(glyph: '#', passable: false, transparent: false);
+        mapdata.AddSpaceType(glyph: '#', passable: false, transparent: false);
+        mapdata.AddSpaceType(glyph: '*', passable: true, transparent: true);
+        mapdata.AddSpaceType(glyph: '~', passable: true, transparent: true);
+        mapdata.AddSpaceType(glyph: '#', passable: false, transparent: false);
+        mapdata.AddSpaceType(glyph: ' ', passable: true, transparent: true);
+        mapdata.AddSpaceType(glyph: '+', passable: true, transparent: false);
 
         bool[][] visibility_map = new bool[levelHeight][];
         for (int i = 0; i < levelWidth; i++)
@@ -82,6 +85,7 @@ public class TestLevelManagerScript : MonoBehaviour {
         for (int i = 0; i < levelHeight; i++)
         {
             tileGrid.Add(new List<Object>());
+            subTileGrid.Add(new List<Object>());
             for (int j = 0; j < levelWidth; j++)
             {
 
@@ -97,6 +101,11 @@ public class TestLevelManagerScript : MonoBehaviour {
                 {
                     var flr = Instantiate(this.tilePrefabs[6]) as GameObject;
                     flr.transform.position = new Vector3(j, i, 1);
+                    subTileGrid[i].Add(flr);
+                }
+                else
+                {
+                    subTileGrid[i].Add(null);
                 }
 
                 var o = Instantiate(this.tilePrefabs[mapdata.grid[j][i]]) as GameObject;
@@ -132,7 +141,6 @@ public class TestLevelManagerScript : MonoBehaviour {
                 tileGrid[i].Add(o);
             }
         }
-
         this.player = Instantiate(this.playerPrefab) as GameObject;
         Vector3 pos = new Vector3(player_x, player_y, 0);
         this.player.transform.position = pos;
@@ -145,8 +153,80 @@ public class TestLevelManagerScript : MonoBehaviour {
 
     }
 
+    private Vector3 lastVisibilityUpdatePlayerPos;
+    private bool isFirstUpdate = true;
+    private int[][] latestVisibility = null;
+
     // Update is called once per frame
     void Update () {
+        bool playerMoved = (isFirstUpdate ||
+           lastVisibilityUpdatePlayerPos != this.player.transform.position);
+        if (latestVisibility == null)
+        {
+            latestVisibility = new int[fullMapBounds.w][];
+            for (int i = 0; i < fullMapBounds.w; i++)
+            {
+                latestVisibility[i] = new int[fullMapBounds.h];
+            }
+        }
+        if (playerMoved)
+        {
+            isFirstUpdate = false;
+            lastVisibilityUpdatePlayerPos = this.player.transform.position;
+ 
+            // generate a visibility map for the entire level
 
+            int playerX = MathUtils.RoundToInt(lastVisibilityUpdatePlayerPos.x);
+            int playerY = MathUtils.RoundToInt(lastVisibilityUpdatePlayerPos.y);
+            PathUtils.CalculateBresenhamProductsToRectangle(playerX, playerY,
+               mapdata.grid, fullMapBounds, (previous, tileIndex) => 
+               ((previous == 0 || !mapdata.palette[tileIndex].transparent) ?
+               0 : 1), 1, false, true, latestVisibility);
+               
+            // load the current player visibility map into the tileGrid
+
+            for (int i = 0; i < fullMapBounds.w; i++)
+            {
+                for (int j = 0; j < fullMapBounds.h; j++)
+                {
+                    ((GameObject)tileGrid[j][i]).
+                       GetComponent<SpriteRenderer>().enabled = false;
+                    if (subTileGrid[j][i] != null)
+                    {
+                        ((GameObject)subTileGrid[j][i]).
+                           GetComponent<SpriteRenderer>().enabled = false;
+                    }
+                }
+            }
+            for (int i = 0; i < fullMapBounds.w; i++)
+            {
+                for (int j = 0; j < fullMapBounds.h; j++)
+                {
+                    if (latestVisibility[i][j] == 1)
+                    {
+                        for (int di = -1; di <= 1; di++) 
+                        {
+                            for (int dj = -1; dj <= 1; dj++) 
+                            {
+                                if (i + di >= 0 && j + dj >= 0 &&
+                                   j + dj < tileGrid.Count &&
+                                   i + di < tileGrid[0].Count)
+                                {
+                                    ((GameObject)tileGrid[j + dj][i + di]).
+                                       GetComponent<SpriteRenderer>().enabled =
+                                       true;
+                                    if (subTileGrid[j + dj][i + di] != null)
+                                    {
+                                    ((GameObject)subTileGrid[j + dj][i + di]).
+                                       GetComponent<SpriteRenderer>().enabled =
+                                       true;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
 }

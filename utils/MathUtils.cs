@@ -6,6 +6,11 @@ namespace ThugLib
 {
     public class MathUtils
     {
+        public static int RoundToInt(double d)
+        {
+            return (int)(d + 0.5);
+        }
+
         public static void Swap(ref int a, ref int b)
         {
             int swap = a;
