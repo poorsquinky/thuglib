@@ -218,15 +218,15 @@ namespace ThugLib
                 outputMap[fromX][fromY] = startingProduct;
                 CalculateBresenhamProductSquareToSquare(fromX, fromY,
                    x, rectangle.y, map,
-                   (a, b, xs, ys) => {
-                      outputMap[xs][ys] = update(a, b);
+                   (previous, mapval, xs, ys) => {
+                      outputMap[xs][ys] = update(previous, mapval);
                       return outputMap[xs][ys];
                    }, startingProduct, includeFirstSquare, includeLastSquare);
                 outputMap[fromX][fromY] = startingProduct;
                 CalculateBresenhamProductSquareToSquare(fromX, fromY,
                    x, rectangle.y2, map,
-                   (a, b, xs, ys) => {
-                      outputMap[xs][ys] = update(a, b);
+                   (previous, mapval, xs, ys) => {
+                      outputMap[xs][ys] = update(previous, mapval);
                       return outputMap[xs][ys];
                    }, startingProduct, includeFirstSquare, includeLastSquare);
             }
@@ -237,15 +237,15 @@ namespace ThugLib
                 outputMap[fromX][fromY] = startingProduct;
                 CalculateBresenhamProductSquareToSquare(fromX, fromY,
                    rectangle.x, y, map,
-                   (a, b, xs, ys) => {
-                      outputMap[xs][ys] = update(a, b);
+                   (previous, mapval, xs, ys) => {
+                      outputMap[xs][ys] = update(previous, mapval);
                       return outputMap[xs][ys];
                    }, startingProduct, includeFirstSquare, includeLastSquare);
                 outputMap[fromX][fromY] = startingProduct;
                 CalculateBresenhamProductSquareToSquare(fromX, fromY,
                    rectangle.x2, y, map,
-                   (a, b, xs, ys) => {
-                      outputMap[xs][ys] = update(a, b);
+                   (previous, mapval, xs, ys) => {
+                      outputMap[xs][ys] = update(previous, mapval);
                       return outputMap[xs][ys];
                    }, startingProduct, includeFirstSquare, includeLastSquare);
             }

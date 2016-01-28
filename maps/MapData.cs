@@ -9,6 +9,7 @@ namespace ThugLib
     {
         public char glyph         = '#';
         public bool passable      = false;
+        public bool transparent   = false;
         public string description = "A wall.";
         public int r = 128;
         public int g = 128;
@@ -36,6 +37,7 @@ namespace ThugLib
         public void AddSpaceType(
                 char glyph,
                 bool passable      = true,
+                bool transparent   = true,
                 string description = "",
                 int r              = 128,
                 int g              = 128,
@@ -47,6 +49,7 @@ namespace ThugLib
             MapSpaceType st = new MapSpaceType();
             st.glyph = glyph;
             st.passable = passable;
+            st.transparent = transparent;
             st.description = description;
             st.r = r;
             st.g = g;
