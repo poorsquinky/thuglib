@@ -1,6 +1,4 @@
 ﻿using UnityEngine;
-using System;
-using System.IO;
 using System.Collections;
 
 public class PlayerScript : MonoBehaviour {
@@ -9,116 +7,37 @@ public class PlayerScript : MonoBehaviour {
     private Vector3 movingFrom = new Vector3(0,0,0);
     private Vector3 movingTo   = new Vector3(0,0,0);
 
-    private long keyDownHoldStart = 0L; // in 100-ns ticks
-    private const long keyDownTimeToRepeatInMS = 200;
-    private const long keyDownRepeatIntervalInMS = 100;
-    private const long TICKS_PER_MS = 10000;
-    private bool keyIsDown = false;
-    private bool keyIsRepeating = false;
-    private int nKeyRepeats = 0;
-        
-        private void StartKeyDown()
-        {
-            keyDownHoldStart = Environment.TickCount;
-            keyIsDown = true;
-            nKeyRepeats = 0;
-        }
+    private float smooth = 15;
 
     // Use this for initialization
     void Start () {
 
     }
 
-    void Update()
+    void FixedUpdate()
     {
         if (!moving)
         {
-            // float h = Input.GetAxis("Horizontal");
-            // float v = Input.GetAxis("Vertical");
-            float h = 0, v = 0;
-            if (Input.GetKeyDown(KeyCode.UpArrow))
-            {
-                v = 1;
-                StartKeyDown();
-            }
-            else if (Input.GetKeyDown(KeyCode.DownArrow))
-            {
-                v = -1;
-                StartKeyDown();
-            }
-            else if (Input.GetKeyDown(KeyCode.LeftArrow))
-            {
-                h = -1;
-                StartKeyDown();
-            }
-            else if (Input.GetKeyDown(KeyCode.RightArrow))
-            {
-                h = 1;
-                StartKeyDown();
-            }
-            else if (keyIsDown)
-            {
-                // check for hold
-                float possible_h = 0, possible_v = 0;
-                if (Input.GetKey(KeyCode.LeftArrow))
-                {
-                    possible_h = -1;
-                }
-                else if (Input.GetKey(KeyCode.RightArrow))
-                {
-                    possible_h = 1;
-                }
-                else if (Input.GetKey(KeyCode.UpArrow))
-                {
-                    possible_v = 1;
-                }
-                else if (Input.GetKey(KeyCode.DownArrow))
-                {
-                    possible_v = -1;
-                }
-                if (possible_h != 0 || possible_v != 0)
-                {
-                    long currentTick = Environment.TickCount;
-                    if (!keyIsRepeating &&
-                       currentTick - keyDownHoldStart > keyDownTimeToRepeatInMS)
-                    {
-                        keyIsRepeating = true;
-                        nKeyRepeats = 1;
-                        h = possible_h;
-                        v = possible_v;
-                    }
-                    else if (keyIsRepeating &&
-                       currentTick - keyDownHoldStart > keyDownTimeToRepeatInMS
-                       + nKeyRepeats * keyDownRepeatIntervalInMS)
-                    {
-                        nKeyRepeats++;
-                        h = possible_h;
-                        v = possible_v;
-                    }
-                }
-                else
-                {
-                    keyIsDown = false;
-                    keyIsRepeating = false;
-                    nKeyRepeats = 0;
-                }
-            }
+            float h = Input.GetAxis("Horizontal");
+            float v = Input.GetAxis("Vertical");
 
             movingFrom = transform.position;
             movingTo   = movingFrom;
 
-            int x = (int)movingFrom.x;
-            int y = (int)movingFrom.y;
+            int x = (int)movingTo.x;
+            int y = (int)movingTo.y;
 
             TestLevelManagerScript lm = transform.parent.GetComponent<TestLevelManagerScript>();
 
             if ((h < 0.0f) && (x > 0) && (lm.mapdata.palette[lm.mapdata.grid[x-1][y]].passable))
             {
                 movingTo.x -= 1;
+                x -= 1;
             }
             else if ((h > 0.0f) && (x < lm.levelWidth) &&  (lm.mapdata.palette[lm.mapdata.grid[x+1][y]].passable))
             {
                 movingTo.x += 1;
+                x += 1;
             }
 
             if ((v < 0.0f) && (y > 0) &&  (lm.mapdata.palette[lm.mapdata.grid[x][y-1]].passable))
@@ -129,15 +48,27 @@ public class PlayerScript : MonoBehaviour {
             {
                 movingTo.y += 1;
             }
-
-
-            transform.position = movingTo;
+            if (transform.position != movingTo)
+                moving = true;
+        }
+        else
+        {
+            Vector3 newPos = transform.position;
+            newPos.x = Mathf.Lerp(transform.position.x,movingTo.x,Time.deltaTime*this.smooth);
+            newPos.y = Mathf.Lerp(transform.position.y,movingTo.y,Time.deltaTime*this.smooth);
+            transform.position = newPos;
+            float dist = Vector3.Distance(transform.position, movingTo);
+            if (dist < 0.01)
+            {
+                transform.position = movingTo;
+                moving = false;
+            }
 
         }
     }
 
     // Update is called once per frame
-    void FixedUpdate () {
+    void Update () {
 
     }
 }
