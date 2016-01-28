@@ -193,13 +193,13 @@ public class TestLevelManagerScript : MonoBehaviour {
                 for (int j = 0; j < fullMapBounds.h; j++)
                 { 
                     if (wasEverVisible[i][j])
-                        tileGrid[j][i].GetComponent<SpriteRenderer>().color = new Color(1f,1f,1f,0.5f);
+                        tileGrid[j][i].GetComponent<SpriteRenderer>().color = new Color(0.25f,0.75f,1f,0.75f);
                     else
                         tileGrid[j][i].GetComponent<SpriteRenderer>().color = new Color(1f,1f,1f,0f);
                     if (subTileGrid[j][i] != null)
                     {
                         if (wasEverVisible[i][j])
-                            subTileGrid[j][i].GetComponent<SpriteRenderer>().color = new Color(1f,1f,1f,0.5f);
+                            subTileGrid[j][i].GetComponent<SpriteRenderer>().color = new Color(0.25f,0.75f,1f,0.75f);
                         else
                             subTileGrid[j][i].GetComponent<SpriteRenderer>().color = new Color(1f,1f,1f,0f);
                     }
