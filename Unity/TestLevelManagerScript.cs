@@ -156,6 +156,7 @@ public class TestLevelManagerScript : MonoBehaviour {
     private Vector3 lastVisibilityUpdatePlayerPos;
     private bool isFirstUpdate = true;
     private int[][] latestVisibility = null;
+    private bool[][] wasEverVisible = null;
 
     // Update is called once per frame
     void Update () {
@@ -164,9 +165,11 @@ public class TestLevelManagerScript : MonoBehaviour {
         if (latestVisibility == null)
         {
             latestVisibility = new int[fullMapBounds.w][];
+            wasEverVisible = new bool[fullMapBounds.w][];
             for (int i = 0; i < fullMapBounds.w; i++)
             {
                 latestVisibility[i] = new int[fullMapBounds.h];
+                wasEverVisible[i] = new bool[fullMapBounds.h];
             }
         }
         if (playerMoved)
@@ -188,7 +191,9 @@ public class TestLevelManagerScript : MonoBehaviour {
             for (int i = 0; i < fullMapBounds.w; i++)
             {
                 for (int j = 0; j < fullMapBounds.h; j++)
-                {
+                { 
+                    // ERIK - here you can
+                    //    if (wasEverVisible[i][j]) grey it out instead
                     ((GameObject)tileGrid[j][i]).
                        GetComponent<SpriteRenderer>().enabled = false;
                     if (subTileGrid[j][i] != null)
@@ -212,6 +217,7 @@ public class TestLevelManagerScript : MonoBehaviour {
                                    j + dj < tileGrid.Count &&
                                    i + di < tileGrid[0].Count)
                                 {
+                                    wasEverVisible[i][j] = true;
                                     ((GameObject)tileGrid[j + dj][i + di]).
                                        GetComponent<SpriteRenderer>().enabled =
                                        true;
