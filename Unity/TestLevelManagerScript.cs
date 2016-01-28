@@ -219,7 +219,7 @@ public class TestLevelManagerScript : MonoBehaviour {
                                    j + dj < tileGrid.Count &&
                                    i + di < tileGrid[0].Count)
                                 {
-                                    wasEverVisible[i][j] = true;
+                                    wasEverVisible[i + di][j + dj] = true;
                                     tileGrid[j + dj][i + di].GetComponent<SpriteRenderer>().color = new Color(1f,1f,1f,1f);
                                     if (subTileGrid[j + dj][i + di] != null)
                                     {
