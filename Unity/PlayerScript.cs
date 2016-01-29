@@ -29,25 +29,28 @@ public class PlayerScript : MonoBehaviour {
 
             TestLevelManagerScript lm = transform.parent.GetComponent<TestLevelManagerScript>();
 
-            if ((h < 0.0f) && (x > 0) && (lm.mapdata.palette[lm.mapdata.grid[x-1][y]].passable))
-            {
-                movingTo.x -= 1;
+            if (h < 0.0f)
                 x -= 1;
-            }
-            else if ((h > 0.0f) && (x < lm.levelWidth - 1) &&  (lm.mapdata.palette[lm.mapdata.grid[x+1][y]].passable))
-            {
-                movingTo.x += 1;
+            else if (h > 0.0f)
                 x += 1;
+
+            if (v < 0.0f)
+                y -= 1;
+            else if (v > 0.0f)
+                y += 1;
+
+            if (
+                    (x > 0) &&
+                    (x < lm.levelWidth) &&
+                    (y > 0) &&
+                    (y < lm.levelHeight) &&
+                    (lm.mapdata.palette[lm.mapdata.grid[x][y]].passable)
+               )
+            {
+                movingTo.x = x;
+                movingTo.y = y;
             }
 
-            if ((v < 0.0f) && (y > 0) &&  (lm.mapdata.palette[lm.mapdata.grid[x][y-1]].passable))
-            {
-                movingTo.y -= 1;
-            }
-            else if ((v > 0.0f) && (y < lm.levelHeight - 1) &&  (lm.mapdata.palette[lm.mapdata.grid[x][y+1]].passable))
-            {
-                movingTo.y += 1;
-            }
             if (transform.position != movingTo)
                 moving = true;
         }
