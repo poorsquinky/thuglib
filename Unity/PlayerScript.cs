@@ -8,6 +8,8 @@ public class PlayerScript : MonoBehaviour {
     private Vector3 movingTo   = new Vector3(0,0,0);
 
     private float smooth = 15;
+    private double moveDelay = 0.1;
+    private double currentMoveDelay = 0;
 
     // Use this for initialization
     void Start () {
@@ -18,41 +20,50 @@ public class PlayerScript : MonoBehaviour {
     {
         if (!moving)
         {
-            float h = Input.GetAxis("Horizontal");
-            float v = Input.GetAxis("Vertical");
-
-            movingFrom = transform.position;
-            movingTo   = movingFrom;
-
-            int x = (int)movingTo.x;
-            int y = (int)movingTo.y;
-
-            TestLevelManagerScript lm = transform.parent.GetComponent<TestLevelManagerScript>();
-
-            if (h < 0.0f)
-                x -= 1;
-            else if (h > 0.0f)
-                x += 1;
-
-            if (v < 0.0f)
-                y -= 1;
-            else if (v > 0.0f)
-                y += 1;
-
-            if (
-                    (x > 0) &&
-                    (x < lm.levelWidth) &&
-                    (y > 0) &&
-                    (y < lm.levelHeight) &&
-                    (lm.mapdata.palette[lm.mapdata.grid[x][y]].passable)
-               )
+            if (currentMoveDelay > 0)
             {
-                movingTo.x = x;
-                movingTo.y = y;
+                currentMoveDelay -= Time.deltaTime;
+                if (currentMoveDelay < 0)
+                    currentMoveDelay = 0;
             }
+            else
+            {
+                float h = Input.GetAxis("Horizontal");
+                float v = Input.GetAxis("Vertical");
 
-            if (transform.position != movingTo)
-                moving = true;
+                movingFrom = transform.position;
+                movingTo   = movingFrom;
+
+                int x = (int)movingTo.x;
+                int y = (int)movingTo.y;
+
+                TestLevelManagerScript lm = transform.parent.GetComponent<TestLevelManagerScript>();
+
+                if (h < 0.0f)
+                    x -= 1;
+                else if (h > 0.0f)
+                    x += 1;
+
+                if (v < 0.0f)
+                    y -= 1;
+                else if (v > 0.0f)
+                    y += 1;
+
+                if (
+                        (x > 0) &&
+                        (x < lm.levelWidth) &&
+                        (y > 0) &&
+                        (y < lm.levelHeight) &&
+                        (lm.mapdata.palette[lm.mapdata.grid[x][y]].passable)
+                   )
+                {
+                    movingTo.x = x;
+                    movingTo.y = y;
+                }
+
+                if (transform.position != movingTo)
+                    moving = true;
+            }
         }
         else
         {
@@ -65,6 +76,7 @@ public class PlayerScript : MonoBehaviour {
             {
                 transform.position = movingTo;
                 moving = false;
+                currentMoveDelay = moveDelay;
             }
 
         }
