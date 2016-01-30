@@ -4,12 +4,26 @@ using System.Collections;
 public class CameraScript : MonoBehaviour {
 
     public Transform target = null;
+
+    public float pixelsPerUnit = 16f;
+    public int maxUnitsHigh = 30;
+
     private float smooth = 5;
     private Vector3 virtual_position = new Vector3(0,0,0);
+
+    private Camera cam;
 
     // Use this for initialization
     void Start () {
         virtual_position = transform.position;
+        cam = GetComponent<Camera>();
+
+        float o = Screen.height / (pixelsPerUnit / 2f);
+        while (o > (float)maxUnitsHigh / 2f)
+        {
+            o = o / (pixelsPerUnit / 2f);
+        }
+        cam.orthographicSize = o;
     }
 
     // Update is called once per frame
